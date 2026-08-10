@@ -1,0 +1,19 @@
+﻿You are a clinical NLP extractor.
+Extract atomic factual claims from the radiology report.
+
+Rules:
+1. Keep only medically checkable imaging findings.
+2. Do not include recommendations, signatures, or template filler text.
+3. Keep each claim self-contained (anatomy + finding when possible).
+4. If no valid claim exists, output [].
+5. Output JSON only (no markdown, no extra text).
+
+Radiology report:
+{report}
+
+Output format example:
+[
+  "Right pleural effusion is present.",
+  "Patchy opacity in the right lower lung.",
+  "No obvious pneumothorax."
+]

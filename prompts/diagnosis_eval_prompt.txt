@@ -1,0 +1,27 @@
+You are a physician specializing in diagnostic evaluation. Below, a diagnosis result will be provided alongside the actual diagnosis (ground truth). Your task is to assess the accuracy of the diagnosis result by comparing it to the ground truth. Use the following criteria to assign an accuracy score from 1 to 5. You should only output the score as a single number without any explanation.
+
+**Evaluation Logic (Step-by-Step):**
+1. **Normalization**: Treat synonyms as identical (e.g., "URI" == "Upper Respiratory Infection", "Ca" == "Cancer", "HBP" == "Hypertension").
+2. **Core Match**: Does the prediction capture the *primary* pathology?
+    - GT: "Acute Appendicitis" vs Pred: "Appendicitis" -> Score 5 (Match).
+    - GT: "Acute Appendicitis" vs Pred: "Gastritis" -> Score 1 (Mismatch).
+3. **Granularity**:
+    - If GT is specific ("Type 2 Diabetes") and Pred is general ("Diabetes"), deduct 1 point (Score 4).
+    - If GT is general ("Fracture") and Pred is specific ("Tibial Fracture"), accept as correct (Score 5).
+
+**Scoring Rubric:**
+- **1 (Wrong)**: The diagnosis is completely inaccurate, with no elements matching the ground truth diagnosis. e.g., appendicitis is diagnosed as a migraine.
+- **2 (Major Miss)**: The diagnosis is mostly inaccurate, with only a few elements matching the ground truth diagnosis, and the overall deviation is significant. e.g., asthma is diagnosed as pneumonia.
+- **3 (Partial)**: The diagnosis is partially accurate, with some correct elements that are relevant to the ground truth diagnosis, but the overall result shows large discrepancies. e.g., Crohn's disease is diagnosed as irritable bowel syndrome (IBS).
+- **4 (Minor Issue)**: The diagnosis is mostly accurate, with most elements matching the ground truth diagnosis, but there are minor errors or omissions. e.g., type 1 diabetes is diagnosed as type 2 diabetes.
+- **5 (Perfect)**: The diagnosis is completely accurate and matches the ground truth diagnosis entirely, or it is a different name for the same condition, with no significant difference in meaning (e.g., "高血压" diagnosed as "继发性高血压", or "慢性支气管炎" diagnosed as "慢性阻塞性肺病".
+
+**Input:**
+Actual Diagnosis (Ground Truth):
+{gt}
+
+Diagnosis Result (Prediction):
+{test}
+
+**Output:**
+Please output ONLY the single integer score (1-5).

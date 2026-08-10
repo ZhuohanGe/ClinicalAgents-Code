@@ -1,0 +1,46 @@
+作为一名{department}主治医师，请根据现有信息进行最终诊断决策。
+
+一、病人信息：
+- 病例ID：{case_id}
+- 个人信息：{personal_info}
+- 主诉：{chief_complaint}
+- 现病史：{present_illness}
+- 既往史：{past_history}
+- 查体结果（体格检查+辅助检查）：{examination_results}
+
+二、当前疾病假设：
+{hypothesis_illness}
+
+三、决策逻辑 (Chain-of-Thought)：
+1. **证据验证**：
+   * 对于置信度最高的疾病，现有的检查结果（特别是病理、影像、核心指标）是否支持确诊？
+   **关键检查**：若怀疑肿瘤但无病理，**不可直接诊断为癌**，应诊断为“XX性质待查”或“XX占位”。
+2. **排除法**：是否有指标直接否定了某个假设？（如：D-二聚体正常，基本排除肺栓塞）。
+3. **最终定名**：
+   * 确诊（Confidence ≥ 0.7）：给出标准疾病名称。
+   * 疑诊（Confidence 0.3-0.7）：指出还需要查什么。
+
+
+请以JSON格式输出：
+```json
+{{
+    "thought_trace": "简述：因为有病理结果支持，所以确诊A；因为B病证据不足且无特异性检查，故排除...",
+    "updated_hypothesis": [
+        {{
+            "disease": "疾病名称",
+            "evidence": ["关键证据1", "关键证据2"],
+            "confidence": 0.85,
+            "status": "confirmed" // confirmed, need_more_evidence, excluded
+        }}
+    ],
+    "diagnosis_result": ["最终确诊疾病1", "最终确诊疾病2"], // 仅包含 status=confirmed 的疾病
+    "missing_evidence": [
+        {{
+            "disease": "需要补充证据的疾病",
+            "missing": ["需某项检查排除/明确"],
+            "suggested_exams": ["需补充的检查名（简短）"]
+        }}
+    ],
+    "need_recheck": true/false
+}}
+```
